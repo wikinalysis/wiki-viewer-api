@@ -7,5 +7,7 @@ defmodule ViewerApiWeb.Router do
 
   scope "/api", ViewerApiWeb do
     pipe_through :api
+
+    resources "/revisions", RevisionController, except: [:new, :edit, :create, :update, :delete]
   end
 end
