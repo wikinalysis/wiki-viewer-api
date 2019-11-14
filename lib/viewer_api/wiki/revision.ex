@@ -2,15 +2,19 @@ defmodule ViewerApi.Wiki.Revision do
   use Ecto.Schema
   import Ecto.Changeset
 
-  @primary_key {:wiki_id, :integer, []}
-  @derive {Phoenix.Param, key: :wiki_id}
+  @primary_key {:id, :string, []}
+  @derive {Phoenix.Param, key: :id}
   schema "revisions" do
     field :created_at, :string
     field :has_text, :boolean, default: false
     field :language, :string, source: :wiki_language
-    field :page_id, :integer
+    field :page_id, :string
+    field :is_first, :boolean, default: false
+    field :is_latest, :boolean, default: false
+    field :revision_number, :integer
     field :sha1, :string
     field :text_length, :integer
+    field :wiki_id, :integer
   end
 
   @doc false

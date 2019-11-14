@@ -9,5 +9,6 @@ defmodule ViewerApiWeb.Router do
     pipe_through :api
 
     resources "/revisions", RevisionController, except: [:new, :edit, :create, :update, :delete]
+    resources "/pages", PageController, except: [:new, :edit, :create, :update, :delete]
   end
 end
