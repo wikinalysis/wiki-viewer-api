@@ -19,4 +19,18 @@ defmodule ViewerApiWeb.FallbackController do
     |> put_view(ViewerApiWeb.ErrorView)
     |> render(:"404")
   end
+
+  def call(conn, {:error, nil}) do
+    conn
+    |> put_status(:not_found)
+    |> put_view(ViewerApiWeb.ErrorView)
+    |> render(:"404")
+  end
+
+  def call(conn, nil) do
+    conn
+    |> put_status(:not_found)
+    |> put_view(ViewerApiWeb.ErrorView)
+    |> render(:"404")
+  end
 end

@@ -23,7 +23,8 @@ defmodule ViewerApiWeb.PageView do
           latest_id: page.latest_id,
           first_id: page.first_id,
           first: render_one(page.first, RevisionView, "revision.json"),
-          latest: render_one(page.latest, RevisionView, "revision.json")
+          latest: render_one(page.latest, RevisionView, "revision.json"),
+          revisions: render_many(page.revisions, RevisionView, "revision.json")
         }
 
       _ ->

@@ -35,7 +35,11 @@ defmodule ViewerApi.Wiki do
       ** (Ecto.NoResultsError)
 
   """
-  def get_revision!(id), do: Repo.get!(Revision, id)
+  def get_revision(id) do
+    Revision
+    |> preload(:page)
+    |> Repo.get(id)
+  end
 
   @doc """
   Creates a revision.
@@ -54,40 +58,6 @@ defmodule ViewerApi.Wiki do
     |> Revision.changeset(attrs)
     |> Repo.insert()
   end
-
-  # @doc """
-  # Updates a revision.
-
-  # ## Examples
-
-  #     iex> update_revision(revision, %{field: new_value})
-  #     {:ok, %Revision{}}
-
-  #     iex> update_revision(revision, %{field: bad_value})
-  #     {:error, %Ecto.Changeset{}}
-
-  # """
-  # def update_revision(%Revision{} = revision, attrs) do
-  #   revision
-  #   |> Revision.changeset(attrs)
-  #   |> Repo.update()
-  # end
-
-  # @doc """
-  # Deletes a Revision.
-
-  # ## Examples
-
-  #     iex> delete_revision(revision)
-  #     {:ok, %Revision{}}
-
-  #     iex> delete_revision(revision)
-  #     {:error, %Ecto.Changeset{}}
-
-  # """
-  # def delete_revision(%Revision{} = revision) do
-  #   Repo.delete(revision)
-  # end
 
   @doc """
   Returns an `%Ecto.Changeset{}` for tracking revision changes.
@@ -131,11 +101,12 @@ defmodule ViewerApi.Wiki do
       ** (Ecto.NoResultsError)
 
   """
-  def get_page!(id) do
+  def get_page(id) do
     Page
     |> preload(:first)
     |> preload(:latest)
-    |> Repo.get!(id)
+    |> preload(:revisions)
+    |> Repo.get(id)
   end
 
   @doc """
@@ -154,40 +125,6 @@ defmodule ViewerApi.Wiki do
     %Page{}
     |> Page.changeset(attrs)
     |> Repo.insert()
-  end
-
-  @doc """
-  Updates a page.
-
-  ## Examples
-
-      iex> update_page(page, %{field: new_value})
-      {:ok, %Page{}}
-
-      iex> update_page(page, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def update_page(%Page{} = page, attrs) do
-    page
-    |> Page.changeset(attrs)
-    |> Repo.update()
-  end
-
-  @doc """
-  Deletes a Page.
-
-  ## Examples
-
-      iex> delete_page(page)
-      {:ok, %Page{}}
-
-      iex> delete_page(page)
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def delete_page(%Page{} = page) do
-    Repo.delete(page)
   end
 
   @doc """

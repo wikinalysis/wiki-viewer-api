@@ -10,8 +10,9 @@ defmodule ViewerApi.Wiki.Page do
     field :revision_count, :integer
     field :title, :string
     field :wiki_id, :integer
-    belongs_to :latest, Revision, type: :string
-    belongs_to :first, Revision, type: :string
+    belongs_to :latest, Revision, type: :string, foreign_key: :latest_id
+    belongs_to :first, Revision, type: :string, foreign_key: :first_id
+    has_many :revisions, Revision, foreign_key: :page_id
   end
 
   @doc false
