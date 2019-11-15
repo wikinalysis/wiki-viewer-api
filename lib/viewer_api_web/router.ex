@@ -7,8 +7,13 @@ defmodule ViewerApiWeb.Router do
 
   scope "/api", ViewerApiWeb do
     pipe_through :api
+    resources "/languages", LanguageController, only: [:index]
+  end
 
-    resources "/revisions", RevisionController, except: [:new, :edit, :create, :update, :delete]
-    resources "/pages", PageController, except: [:new, :edit, :create, :update, :delete]
+  scope "/api/:language", ViewerApiWeb do
+    pipe_through :api
+
+    resources "/revisions", RevisionController, only: [:index, :show]
+    resources "/pages", PageController, only: [:index, :show]
   end
 end

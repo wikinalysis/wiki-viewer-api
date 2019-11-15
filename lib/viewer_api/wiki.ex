@@ -9,16 +9,36 @@ defmodule ViewerApi.Wiki do
   alias ViewerApi.Wiki.Revision
 
   @doc """
+  Returns the list of languages.
+
+  ## Examples
+
+      iex> list_languages()
+      [%Language{}, ...]
+
+  """
+  def list_languages do
+    [
+      %Language{code: "simple", name: "Simple English"},
+      %Language{code: "tn", name: "Setswana"},
+      %Language{code: "sco", name: "Scottish"},
+      %Language{code: "ga", name: "Irish"}
+    ]
+  end
+
+  @doc """
   Returns the list of revisions.
 
   ## Examples
 
-      iex> list_revisions()
+      iex> list_revisions(language)
       [%Revision{}, ...]
 
   """
-  def list_revisions do
-    Repo.all(Revision)
+  def list_revisions(language) do
+    Revision
+    |> where([r], r.language == ^language)
+    |> Repo.all()
   end
 
   @doc """
@@ -79,12 +99,14 @@ defmodule ViewerApi.Wiki do
 
   ## Examples
 
-      iex> list_pages()
+      iex> list_pages(language)
       [%Page{}, ...]
 
   """
-  def list_pages do
-    Repo.all(Page)
+  def list_pages(language) do
+    Page
+    |> where([r], r.language == ^language)
+    |> Repo.all()
   end
 
   @doc """

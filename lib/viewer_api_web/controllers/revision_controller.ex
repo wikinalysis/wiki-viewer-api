@@ -5,13 +5,13 @@ defmodule ViewerApiWeb.RevisionController do
 
   action_fallback ViewerApiWeb.FallbackController
 
-  def index(conn, _params) do
-    revisions = Wiki.list_revisions()
+  def index(conn, %{"language" => language}) do
+    revisions = Wiki.list_revisions(language)
     render(conn, "index.json", revisions: revisions)
   end
 
   def show(conn, %{"id" => id}) do
-    with {:ok, revision} <- Wiki.get_revision(id) do
+    with %Wiki.Revision{} = revision <- Wiki.get_revision(id) do
       render(conn, "show.json", revision: revision)
     end
   end
