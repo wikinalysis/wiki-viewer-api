@@ -6,6 +6,7 @@ defmodule ViewerApi.Wiki do
   import Ecto.Query, warn: false
   alias ViewerApi.Repo
 
+  alias ViewerApi.Wiki.Wiki
   alias ViewerApi.Wiki.Revision
 
   @doc """
@@ -17,13 +18,8 @@ defmodule ViewerApi.Wiki do
       [%Language{}, ...]
 
   """
-  def list_languages do
-    [
-      %Language{code: "simple", name: "Simple English"},
-      %Language{code: "tn", name: "Setswana"},
-      %Language{code: "sco", name: "Scottish"},
-      %Language{code: "ga", name: "Irish"}
-    ]
+  def list_wikis do
+    Repo.all(Wiki)
   end
 
   @doc """

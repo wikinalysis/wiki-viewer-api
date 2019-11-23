@@ -2,7 +2,6 @@ defmodule ViewerApiWeb.PageController do
   use ViewerApiWeb, :controller
 
   alias ViewerApi.Wiki
-  alias ViewerApi.Wiki.Page
 
   action_fallback ViewerApiWeb.FallbackController
 
