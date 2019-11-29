@@ -9,8 +9,11 @@ defmodule ViewerApiWeb.Router do
   scope "/api", ViewerApiWeb do
     pipe_through :api
     resources "/wikis", WikiController, only: [:index]
+
+    get "/revisions/select", GraphController, :revision_select
+    get "/pages/select", GraphController, :page_select
+
     resources "/revisions", RevisionController, only: [:index, :show]
     resources "/pages", PageController, only: [:index, :show]
-    get "/revision-count-latest-length", GraphController, :revision_count_latest_length
   end
 end

@@ -2,19 +2,51 @@ defmodule ViewerApiWeb.GraphView do
   use ViewerApiWeb, :view
   alias ViewerApiWeb.GraphView
 
-  def render("revision_count_latest_length.json", %{data: data, meta: meta}) do
+  def render("revision_select.json", %{data: data}) do
     %{
-      meta: %{max_revision_count: elem(meta, 0), max_latest_length: elem(meta, 1)},
-      data: render_many(data, GraphView, "revision_count_latest_length_data.json")
+      meta: create_meta(data),
+      data: render_many(data, GraphView, "map.json")
     }
   end
 
-  def render("revision_count_latest_length_data.json", %{graph: data}) do
+  def render("page_select.json", %{data: data}) do
     %{
-      page_id: elem(data, 0),
-      revision_id: elem(data, 1),
-      revision_count: elem(data, 2),
-      latest_length: elem(data, 3)
+      meta: create_meta(data),
+      data: render_many(data, GraphView, "map.json")
     }
+  end
+
+  def render("map.json", %{graph: data}) do
+    data
+  end
+
+  defp create_meta(data) do
+    IO.puts(inspect(data))
+
+    case List.first(data) do
+      %{text_length: _field} ->
+        {min, max} = Enum.min_max_by(data, fn d -> d.text_length end)
+
+        %{
+          max_text_length: max.text_length,
+          min_text_length: min.text_length
+        }
+
+      %{created_at: _field} ->
+        {min, max} = Enum.min_max_by(data, fn d -> d.created_at end)
+
+        %{
+          max_created_at: max.created_at,
+          min_created_at: min.created_at
+        }
+
+      %{revision_count: _field} ->
+        {min, max} = Enum.min_max_by(data, fn d -> d.revision_count end)
+
+        %{
+          max_revision_count: max.revision_count,
+          min_revision_count: min.revision_count
+        }
+    end
   end
 end

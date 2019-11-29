@@ -7,25 +7,26 @@ defmodule ViewerApi.Graph do
   alias ViewerApi.Repo
   alias ViewerApi.Wiki.{Revision, Page}
 
-  def revision_count_vs_latest_length(language) do
+  def revision_select(language, field) do
+    fields = [:id, :language, field]
+
     query =
-      from p in Page,
-        where: p.language == ^language,
-        join: r in Revision,
-        on: r.id == p.latest_id,
-        select: {p.id, r.id, p.revision_count, r.text_length}
+      from r in Revision,
+        where: r.language == ^language,
+        where: r.is_latest == true,
+        select: map(r, ^fields)
 
     Repo.all(query)
   end
 
-  def revision_count_vs_latest_length_meta(language) do
+  def page_select(language, field) do
+    fields = [:id, :language, field]
+
     query =
       from p in Page,
         where: p.language == ^language,
-        join: r in Revision,
-        on: r.id == p.latest_id,
-        select: {max(p.revision_count), max(r.text_length)}
+        select: map(p, ^fields)
 
-    Repo.one(query)
+    Repo.all(query)
   end
 end
