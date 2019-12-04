@@ -21,8 +21,6 @@ defmodule ViewerApiWeb.GraphView do
   end
 
   defp create_meta(data) do
-    IO.puts(inspect(data))
-
     case List.first(data) do
       %{text_length: _field} ->
         {min, max} = Enum.min_max_by(data, fn d -> d.text_length end)
