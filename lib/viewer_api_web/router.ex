@@ -2,7 +2,12 @@ defmodule ViewerApiWeb.Router do
   use ViewerApiWeb, :router
 
   pipeline :api do
-    plug CORSPlug, origin: "http://localhost:3000"
+    if Mix.env() == :dev do
+      plug CORSPlug, origin: "*"
+    else
+      plug CORSPlug, origin: "https://www.wikinalysis.com"
+    end
+
     plug :accepts, ["json"]
   end
 
