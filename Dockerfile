@@ -1,4 +1,4 @@
-FROM elixir:1.9 as builder
+FROM elixir:1.9-alpine as builder
 
 ENV MIX_ENV=prod \
   TEST=1 \
@@ -23,19 +23,16 @@ COPY mix.lock .
 RUN mix do deps.get, deps.compile, phx.digest, release
 
 # ---- Application Stage ----
-FROM debian:stretch AS app
+FROM alpine AS app
 
 ENV LANG=C.UTF-8 \
   MIX_ENV=prod
 
 # Install openssl
-# RUN apk update && apk add openssl ncurses-libs
-
-# Install openssl
-RUN apt-get update && apt-get install -y openssl
+RUN apk update && apk add openssl ncurses-libs
 
 # Copy over the build artifact from the previous step and create a non root user
-RUN useradd --create-home app
+RUN adduser -h /home/app -D app
 WORKDIR /home/app
 COPY --from=builder /app/_build .
 RUN chown -R app: ./prod
