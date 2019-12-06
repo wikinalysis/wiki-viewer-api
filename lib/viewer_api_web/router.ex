@@ -17,6 +17,7 @@ defmodule ViewerApiWeb.Router do
 
     get "/revisions/select", GraphController, :revision_select
     get "/pages/select", GraphController, :page_select
+    get "/health", HealthController, :index
 
     resources "/revisions", RevisionController, only: [:index, :show]
     resources "/pages", PageController, only: [:index, :show]
