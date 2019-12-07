@@ -41,6 +41,7 @@ defmodule ViewerApi.MixProject do
       {:gettext, "~> 0.11"},
       {:cors_plug, "~> 1.5"},
       {:proper_case, "~> 1.0.2"},
+      {:distillery, "~> 2.1"},
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"}
     ]

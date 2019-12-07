@@ -1,12 +1,20 @@
-FROM elixir:1.9-alpine as builder
+FROM elixir:1.9 as builder
+
+ARG build_env=prod
+ARG app_name=viewer_api
+ARG project
 
 ENV MIX_ENV=prod \
   TEST=1 \
-  LANG=C.UTF-8
+  LANG=C.UTF-8 \
+  PROJECT_ID=$project
 
-# Install hex and rebar
-RUN mix local.hex --force && \
-    mix local.rebar --force
+RUN apt-get update && apt-get install apt-transport-https ca-certificates openssl gnupg curl -y
+
+RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" \
+    | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg \
+    | apt-key --keyring /usr/share/keyrings/cloud.google.gpg add - && apt-get update && apt-get install google-cloud-sdk -y \
+    && mix local.hex --force && mix local.rebar --force
 
 # Create the application build directory
 RUN mkdir /app
@@ -16,27 +24,11 @@ WORKDIR /app
 COPY config ./config
 COPY lib ./lib
 COPY priv ./priv
+COPY rel ./rel
 COPY mix.exs .
 COPY mix.lock .
 
 # Fetch the application dependencies and build the application
-RUN mix do deps.get, deps.compile, phx.digest, release
-
-# ---- Application Stage ----
-FROM alpine AS app
-
-ENV LANG=C.UTF-8 \
-  MIX_ENV=prod
-
-# Install openssl
-RUN apk update && apk add openssl ncurses-libs
-
-# Copy over the build artifact from the previous step and create a non root user
-RUN adduser -h /home/app -D app
-WORKDIR /home/app
-COPY --from=builder /app/_build .
-RUN chown -R app: ./prod
-USER app
-
-# Run the Phoenix app
-CMD ["./prod/rel/viewer_api/bin/viewer_api", "start"]
+RUN mix do deps.get, deps.compile \
+    && mix distillery.release --env=${build_env} --executable --verbose \
+    && mv _build/${build_env}/rel/${app_name}/bin/${app_name}.run /release/latest

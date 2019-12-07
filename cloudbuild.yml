@@ -1,0 +1,20 @@
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args:
+      [
+        build,
+        --build-arg,
+        project=$PROJECT_ID,
+        -t,
+        gcr.io/$PROJECT_ID/wiki-backend,
+        .,
+      ]
+    env:
+      - "PROJECT_ID=$PROJECT_ID"
+    volumes:
+      - name: release
+        path: /release
+artifacts:
+  objects:
+    location: "gs://$PROJECT_ID-releases/"
+    paths: ["/release/latest"]
