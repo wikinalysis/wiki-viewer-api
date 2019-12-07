@@ -1,6 +1,10 @@
 defmodule ViewerApiWeb.Router do
   use ViewerApiWeb, :router
 
+  pipeline :test do
+    plug CORSPlug, origin: "*"
+  end
+
   pipeline :api do
     if Mix.env() == :dev do
       plug CORSPlug, origin: "*"
@@ -9,6 +13,11 @@ defmodule ViewerApiWeb.Router do
     end
 
     plug :accepts, ["json"]
+  end
+
+  scope "/", ViewerApiWeb do
+    pipe_through(:test)
+    get "/", TestController, :index
   end
 
   scope "/api", ViewerApiWeb do

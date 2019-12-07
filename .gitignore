@@ -30,3 +30,5 @@ viewer_api-*.tar
 /priv/static/
 
 prod.env
+
+tmp.sh
