@@ -39,7 +39,6 @@ defmodule ViewerApi.MixProject do
       {:ecto_sql, "~> 3.1"},
       {:myxql, ">= 0.0.0"},
       {:gettext, "~> 0.11"},
-      {:distillery, "~> 2.1"},
       {:cors_plug, "~> 1.5"},
       {:proper_case, "~> 1.0.2"},
       {:jason, "~> 1.0"},
